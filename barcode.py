@@ -17,19 +17,16 @@ def main(args):
             s = record.seq.reverse_complement()[::-1]
             q = record.letter_annotations['phred_quality']
             bcount[s[0:18]] += 1
-    # for b in barcodes:
-    #     print b + '\t' + str(bcount[b])
+    seqDictCorrected = defaultdict(int)
+    for b in barcodes:
+        hamming_bnb_search(b, bcount, seqDictCorrected, args.maxdist)
     print bcount.values()
     return 0
 
 
-seqDict = defaultdict(int)
-seqDictCorrected = defaultdict(int)
-
-
-def hamming_bnb_search(barcode_dic, seqDict):
-    for barcode in barcode_dic:
-        minDist = 4
+def hamming_bnb_search(barcode, seqDict, seqDictCorrected, maxdist):
+        minDist = maxdist
+        best = None
         for seq in seqDict.keys():
             currDist = 0
             for a, b in zip(str(seq), barcode):
@@ -38,12 +35,16 @@ def hamming_bnb_search(barcode_dic, seqDict):
                     break
             if currDist < minDist:
                 minDist = currDist
-                seqDictCorrected[barcode] += seqDict[seq]
+                best = seq
+        if best is not None:
+            seqDictCorrected[barcode] += seqDict[best]
 
 
 if __name__ == '__main__':
     import argparse
     parser = argparse.ArgumentParser(description="Barcode analysis.")
+    parser.add_argument("-m", "--maxdist", action="store", type=int, default=4,
+                        metavar="MAXDIST", dest="maxdist", help="Maximum Hamming distance for barcode match.")
     parser.add_argument("-b", "--barcode", action="store", type=str,
                         metavar="BARCODES", dest="bcfile", help="Path to barcode file.")
     parser.add_argument("fastq", nargs="?", metavar="FASTQ", help="Path to FASTQ file.")
