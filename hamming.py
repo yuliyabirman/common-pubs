@@ -1,4 +1,7 @@
-def min_hamming(barcode, library, max_dist=2):
+def calc_min_hamming(barcode, library, max_dist=2):
+	"""
+	library: a list of barcodes
+	"""
 
 	if barcode in library:
 		return barcode, 0
@@ -23,4 +26,4 @@ def min_hamming(barcode, library, max_dist=2):
 		if min_dist == 1:
 			return best_allele, min_dist 
 
-	return best_allele, min_dist
+	return best_allele if min_dist < len(barcode) else None, min_dist

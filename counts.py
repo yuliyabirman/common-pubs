@@ -10,10 +10,11 @@ def calc_mutant_freqs(fastq_records, read_to_mutant, library):
 		if mutant not in counts:
 			counts[mutant] = 0
 		counts[mutant] += 1
-	return counts
-	#total = float(sum(counts.values))
-	#return {value / total for value in counts}
-
+	total = float(sum(counts.values()))
+	freqs = {}
+	for key, value in counts.items():
+		freqs[key] = value / total
+	return freqs
 
 if __name__ == '__main__':
 	import sys
