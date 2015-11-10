@@ -66,8 +66,3 @@ if __name__ == '__main__':
         sys.exit(main(parser.parse_args()))
                                     
 
-if __name__ == '__main__':
-	import sys
-	input_file_name = sys.argv[1]
-	output_file_name = sys.argv[2]
-	extract(input_file_name, output_file_name)

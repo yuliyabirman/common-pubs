@@ -60,18 +60,21 @@ def calc_regression(times, ratio_list):
 
   return slopes
 
-def main():
+# TODO: Stop hardcoding
+def main(args):
+
+  test_name = args[1]
   
   # Day 1, timepoints T0, T1, T2
   # for each residue position, find log2 ratio for each time point
   # load input files containing the residue position, codon, and frequency
 
-  ratios_0 = load_ratios(homedir + "/populations/pop0_pynd_0_ATCAGT.pkl")
-  ratios_1 = load_ratios(homedir + "/populations/pop1_pynd_1_GCTCAT.pkl")
-  ratios_2 = load_ratios(homedir + "/populations/pop2_pynd_2_AGGAAT.pkl")
-  ratios_3 = load_ratios(homedir + "/populations/pop3_pynd_3_CTTTTG.pkl")
-  ratios_4 = load_ratios(homedir + "/populations/pop4_pynd_4_TAGTTG.pkl")
-  ratios_5 = load_ratios(homedir + "/populations/pop5_pynd_5_CCGGTG.pkl")
+  ratios_0 = load_ratios(homedir + "/populations/pop0_" + test_name + "_0.pkl")
+  ratios_1 = load_ratios(homedir + "/populations/pop1_" + test_name + "_1.pkl")
+  ratios_2 = load_ratios(homedir + "/populations/pop2_" + test_name + "_2.pkl")
+  ratios_3 = load_ratios(homedir + "/populations/pop3_" + test_name + "_3.pkl")
+  ratios_4 = load_ratios(homedir + "/populations/pop4_" + test_name + "_4.pkl")
+  ratios_5 = load_ratios(homedir + "/populations/pop5_" + test_name + "_5.pkl")
 
   times_day_1 = [0, 2.43, 4.11]
   times_day_2 = [0, 2.02, 4.16]
@@ -79,11 +82,12 @@ def main():
   fitness_day_1 = calc_regression(times_day_1, [ratios_0, ratios_1, ratios_2])
   fitness_day_2 = calc_regression(times_day_2, [ratios_3, ratios_4, ratios_5])
 
-  pickle.dump(fitness_day_1, open(homedir + '/fitness/fitness_day_1', 'wb'))
-  pickle.dump(fitness_day_2, open(homedir + '/fitness/fitness_day_2', 'wb'))
+  pickle.dump(fitness_day_1, open(homedir + '/fitness/' + test_name + '_fitness_day_1', 'wb'))
+  pickle.dump(fitness_day_2, open(homedir + '/fitness/' + test_name + '_fitness_day_2', 'wb'))
 
 # determine selection coefficient, s,  for each mutation
 # by finding the slope of this ratio to time in WT generations
 
 if __name__ == '__main__':
-  main()
+  import sys
+  main(sys.argv)

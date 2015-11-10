@@ -22,22 +22,26 @@ def update_read_map(fastq_file_name, library_file_name, max_hamming_dist = 2, sh
 
 def guess_alleles(fastq_records, library, redis_db, max_hamming_dist = 2):
 	n_unmatched = 0
+	i = 0
 	for read in fastq_records:
 		rev_comp = read.get_barcode_rev_comp() 
-		got = red.get(dict_prefix + rev_comp)
+		got = redis_db.get(dict_prefix + rev_comp)
 		#if read not in read_to_allele:
-		if got is not None:
+		if got is None:
 			allele, hamming_dist = hamming.calc_min_hamming(rev_comp, library, max_hamming_dist)
 			# TODO: don't try hamming correction if it's another group's
 			if allele is None:
 				n_unmatched += 1
 			else:
-				redis.set(dict_prefix + rev_comp, allele)
+				redis_db.set(dict_prefix + rev_comp, allele)
 				#read_to_allele[rev_comp] = allele
 			#try:
 			#	read_to_allele[rev_comp] = library[rev_comp]
 			#except KeyError:
 			#	n_unmatched += 1
+		i += 1
+		if i % 100000 == 0:
+			print("Ran " + str(i))
 	print("There were %i unmatched reads." % n_unmatched)
 	#return read_to_allele
 	
