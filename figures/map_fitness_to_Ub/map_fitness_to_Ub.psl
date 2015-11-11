@@ -1,0 +1,12 @@
+reinit
+
+viewport 500, 500
+fetch 1ubq.pdb
+
+cd ~/pynd-pubs/figures/map_fitness_to_Ub
+run map_fitness_to_Ub.py
+loadFitnessFactors 1ubq, startaa=1
+
+bg white
+as car
+select none
